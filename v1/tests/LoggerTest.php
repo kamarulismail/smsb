@@ -5,7 +5,7 @@
  *
  * @author Kamarul Ariffin Ismail <kamarul.ismail@gmail.com>
  */
-require_once realpath(dirname(__FILE__) . '/../') . '/classes/Logger.php';
+require_once (realpath(dirname(__FILE__) . '/../') . '/classes/Logger.php');
 
 class LoggerTest extends PHPUnit_Framework_TestCase {
 

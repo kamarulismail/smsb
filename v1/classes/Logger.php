@@ -26,13 +26,13 @@ class Logger
     {
         if (($log_level< LOG_EMERG) or ($log_level > LOG_DEBUG))
         {
-	    self::$error_message = 'Invalid log level';
+            self::$error_message = 'Invalid log level';
             return false;
         }
 
         self::$log_level = $log_level;
 
-	return true;
+        return true;
     }
 
     public static function logMessage($filename, $message, $log_level = LOG_NOTICE, $destination = self::DAILY_LOG)
@@ -45,46 +45,48 @@ class Logger
 
         if (($log_level< LOG_EMERG) or ($log_level > LOG_DEBUG))
         {
-	    self::$error_message = 'Invalid log level';
+            self::$error_message = 'Invalid log level';
             return false;
         }
 
         if ( (strlen($message) == 0) or (strlen($message) > self::MAX_LOG_MESSAGE_LENGTH) )
         {
-	    self::$error_message = 'Invalid message lenght';
+            self::$error_message = 'Invalid message lenght';
             return false;
         }
 
         # Minimum 5 characters, maximum 50 characters. Must start with an alphanumeric character and may only contain alphanumeric, period (.), dash (-) and underscore (_).
-	$valid_filename = preg_match('/^([A-Z]|[a-z]|[0-9]){1}([A-Z]|[a-z]|[0-9]|\.|-|_){4,49}$/',$filename);
-	if ( ($valid_filename === false) or ($valid_filename == 0) )
-	{
-	   self::$error_message = 'Invalid filename';
+        $valid_filename = preg_match('/^([A-Z]|[a-z]|[0-9]){1}([A-Z]|[a-z]|[0-9]|\.|-|_){4,49}$/',$filename);
+        if ( ($valid_filename === false) or ($valid_filename == 0) )
+        {
+           self::$error_message = 'Invalid filename';
            return false;
-	}
+        }
 
         if ($log_level > self::$log_level)
         {
             return true;
         }
 
-	if (!openlog(':'.$destination.':'.$filename.':', LOG_NDELAY, LOG_LOCAL5))
-	{
-	    self::$error_message = 'Can not open log';
-	    return false;
-	}
+        defined('LOG_LOCAL5') ? LOG_LOCAL5 : DEFINE('LOG_LOCAL5', 168); //MODIFY FOR WINDOWS ENVIRONMENT
+        $facility = (DIRECTORY_SEPARATOR == '/') ? LOG_USER : LOG_LOCAL5; //MODIFY FOR WINDOWS ENVIRONMENT
+        if (!openlog(':'.$destination.':'.$filename.':', LOG_NDELAY, $facility))
+        {
+            self::$error_message = 'Can not open log';
+            return false;
+        }
 
-	if (!syslog($log_level, $message))
-	{
-	    self::$error_message = 'Can not send message to syslog';
-	    return false;
-	}
+        if (!syslog($log_level, $message))
+        {
+            self::$error_message = 'Can not send message to syslog';
+            return false;
+        }
 
-	closelog();
+        closelog();
 
-	self::$error_message = '';
+        self::$error_message = '';
 
-	return true;
+        return true;
     }
 
 }

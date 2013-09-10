@@ -1,9 +1,18 @@
 <phpunit colors="true" syntaxCheck="true">
     <testsuites>
-        <testsuite name="Class Test Suite">
-            <directory>tests</directory>
+        <testsuite name="Class Suite">
+            <directory>./tests</directory>
         </testsuite>
+<!--        <testsuite name="Class Suite">
+            <directory>./application</directory>
+        </testsuite>-->
     </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>./classes/</directory>
+        </whitelist>
+    </filter>
 
     <logging>
         <log type="coverage-html" target="logs/report" charsset="UTF-8" yui="true" highlight="true" lowUpperBound="50" highLowerBound="80" />
